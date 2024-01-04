@@ -29,6 +29,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.samples.petclinic.YdbDockerBaseTest;
 import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.samples.petclinic.owner.OwnerRepository;
 import org.springframework.samples.petclinic.owner.Pet;
@@ -67,11 +68,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Michael Isvy
  * @author Dave Syer
  */
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-// Ensure that if the mysql profile is active we connect to the real database:
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-// @TestPropertySource("/application-postgres.properties")
-class ClinicServiceTests {
+
+class ClinicServiceTests extends YdbDockerBaseTest {
 
 	@Autowired
 	protected OwnerRepository owners;
@@ -168,7 +166,7 @@ class ClinicServiceTests {
 
 	@Test
 	@Transactional
-	void shouldUpdatePetName() throws Exception {
+	void shouldUpdatePetName() {
 		Owner owner6 = this.owners.findById(6);
 		Pet pet7 = owner6.getPet(7);
 		String oldName = pet7.getName();
@@ -213,7 +211,7 @@ class ClinicServiceTests {
 	}
 
 	@Test
-	void shouldFindVisitsByPetId() throws Exception {
+	void shouldFindVisitsByPetId() {
 		Owner owner6 = this.owners.findById(6);
 		Pet pet7 = owner6.getPet(7);
 		Collection<Visit> visits = pet7.getVisits();

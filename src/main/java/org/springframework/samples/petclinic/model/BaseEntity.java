@@ -16,11 +16,16 @@
 package org.springframework.samples.petclinic.model;
 
 import java.io.Serializable;
+import java.util.concurrent.ThreadLocalRandom;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.id.IdentifierGenerator;
+import org.hibernate.id.IdentityGenerator;
 
 /**
  * Simple JavaBean domain object with an id property. Used as a base class for objects
@@ -33,7 +38,8 @@ import jakarta.persistence.MappedSuperclass;
 public class BaseEntity implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(generator = "random-int-id")
+	@GenericGenerator(name = "random-int-id", type = RandomIntGenerator.class)
 	private Integer id;
 
 	public Integer getId() {
@@ -48,4 +54,11 @@ public class BaseEntity implements Serializable {
 		return this.id == null;
 	}
 
+	private static class RandomIntGenerator implements IdentifierGenerator {
+
+		@Override
+		public Object generate(SharedSessionContractImplementor sharedSessionContractImplementor, Object o) {
+			return ThreadLocalRandom.current().nextInt();
+		}
+	}
 }

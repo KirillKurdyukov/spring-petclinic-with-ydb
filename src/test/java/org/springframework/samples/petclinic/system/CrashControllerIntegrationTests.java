@@ -38,6 +38,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.petclinic.YdbDockerBaseTest;
 
 /**
  * Integration Test for {@link CrashController}.
@@ -47,7 +48,7 @@ import org.springframework.http.ResponseEntity;
 // NOT Waiting https://github.com/spring-projects/spring-boot/issues/5574
 @SpringBootTest(webEnvironment = RANDOM_PORT,
 		properties = { "server.error.include-message=ALWAYS", "management.endpoints.enabled-by-default=false" })
-class CrashControllerIntegrationTests {
+class CrashControllerIntegrationTests extends YdbDockerBaseTest {
 
 	@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class,
 			DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
@@ -65,10 +66,10 @@ class CrashControllerIntegrationTests {
 	void testTriggerExceptionJson() {
 		ResponseEntity<Map<String, Object>> resp = rest.exchange(
 				RequestEntity.get("http://localhost:" + port + "/oups").build(),
-				new ParameterizedTypeReference<Map<String, Object>>() {
-				});
+                new ParameterizedTypeReference<>() {
+                });
 		assertThat(resp).isNotNull();
-		assertThat(resp.getStatusCode().is5xxServerError());
+		assertThat(resp.getStatusCode().is5xxServerError()).isEqualTo(true);
 		assertThat(resp.getBody().containsKey("timestamp"));
 		assertThat(resp.getBody().containsKey("status"));
 		assertThat(resp.getBody().containsKey("error"));
@@ -84,7 +85,7 @@ class CrashControllerIntegrationTests {
 		ResponseEntity<String> resp = rest.exchange("http://localhost:" + port + "/oups", HttpMethod.GET,
 				new HttpEntity<>(headers), String.class);
 		assertThat(resp).isNotNull();
-		assertThat(resp.getStatusCode().is5xxServerError());
+		assertThat(resp.getStatusCode().is5xxServerError()).isEqualTo(true);
 		assertThat(resp.getBody()).isNotNull();
 		// html:
 		assertThat(resp.getBody()).containsSubsequence("<body>", "<h2>", "Something happened...", "</h2>", "<p>",

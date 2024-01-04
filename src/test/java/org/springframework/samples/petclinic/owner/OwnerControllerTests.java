@@ -23,7 +23,6 @@ import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -36,17 +35,13 @@ import java.util.List;
 import org.assertj.core.util.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledInNativeImage;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.aot.DisabledInAotMode;
+import org.springframework.samples.petclinic.YdbDockerBaseTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
@@ -54,17 +49,15 @@ import org.springframework.test.web.servlet.MockMvc;
  *
  * @author Colin But
  */
-@WebMvcTest(OwnerController.class)
-@DisabledInNativeImage
-@DisabledInAotMode
-class OwnerControllerTests {
+
+class OwnerControllerTests extends YdbDockerBaseTest {
 
 	private static final int TEST_OWNER_ID = 1;
 
 	@Autowired
 	private MockMvc mockMvc;
 
-	@MockBean
+	@Autowired
 	private OwnerRepository owners;
 
 	private Owner george() {
@@ -84,22 +77,6 @@ class OwnerControllerTests {
 		george.addPet(max);
 		max.setId(1);
 		return george;
-	};
-
-	@BeforeEach
-	void setup() {
-
-		Owner george = george();
-		given(this.owners.findByLastName(eq("Franklin"), any(Pageable.class)))
-			.willReturn(new PageImpl<Owner>(Lists.newArrayList(george)));
-
-		given(this.owners.findAll(any(Pageable.class))).willReturn(new PageImpl<Owner>(Lists.newArrayList(george)));
-
-		given(this.owners.findById(TEST_OWNER_ID)).willReturn(george);
-		Visit visit = new Visit();
-		visit.setDate(LocalDate.now());
-		george.getPet("Max").getVisits().add(visit);
-
 	}
 
 	@Test

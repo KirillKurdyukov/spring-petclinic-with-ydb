@@ -1,46 +1,53 @@
 plugins {
-  id 'java'
-  id 'org.springframework.boot' version '3.2.0'
-  id 'io.spring.dependency-management' version '1.1.4'
-  id 'org.graalvm.buildtools.native' version '0.9.28'
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.graalvm.buildtools.native' version '0.9.28'
 }
 
 apply plugin: 'java'
 
 group = 'org.springframework.samples'
 version = '3.2.0'
-sourceCompatibility = '17'
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+}
 
 repositories {
-  mavenCentral()
+    mavenCentral()
+
+    mavenLocal()
 }
 
 ext.webjarsFontawesomeVersion = "4.7.0"
 ext.webjarsBootstrapVersion = "5.3.2"
 
 dependencies {
-  implementation 'org.springframework.boot:spring-boot-starter-cache'
-  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-  implementation 'org.springframework.boot:spring-boot-starter-web'
-  implementation 'org.springframework.boot:spring-boot-starter-validation'
-  implementation 'javax.cache:cache-api'
-  implementation 'jakarta.xml.bind:jakarta.xml.bind-api'
-  runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
-  runtimeOnly "org.webjars.npm:bootstrap:${webjarsBootstrapVersion}"
-  runtimeOnly "org.webjars.npm:font-awesome:${webjarsFontawesomeVersion}"
-  runtimeOnly 'com.github.ben-manes.caffeine:caffeine'
-  runtimeOnly 'com.h2database:h2'
-  runtimeOnly 'com.mysql:mysql-connector-j'
-  runtimeOnly 'org.postgresql:postgresql'
-  developmentOnly 'org.springframework.boot:spring-boot-devtools'
-  testImplementation 'org.springframework.boot:spring-boot-starter-test'
-  testImplementation 'org.springframework.boot:spring-boot-testcontainers'
-  testImplementation 'org.springframework.boot:spring-boot-docker-compose'
-  testImplementation 'org.testcontainers:junit-jupiter'
-  testImplementation 'org.testcontainers:mysql'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'javax.cache:cache-api'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api'
+    runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
+    runtimeOnly "org.webjars.npm:bootstrap:${webjarsBootstrapVersion}"
+    runtimeOnly "org.webjars.npm:font-awesome:${webjarsFontawesomeVersion}"
+    runtimeOnly 'com.github.ben-manes.caffeine:caffeine'
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'tech.ydb.jdbc:ydb-jdbc-driver:2.0.5'
+    runtimeOnly 'tech.ydb:hibernate-dialect:1.0-SNAPSHOT'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.springframework.boot:spring-boot-docker-compose'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:mysql'
+    testImplementation 'tech.ydb.test:ydb-junit5-support:2.1.9'
 }
 
 tasks.named('test') {
-  useJUnitPlatform()
+    useJUnitPlatform()
 }

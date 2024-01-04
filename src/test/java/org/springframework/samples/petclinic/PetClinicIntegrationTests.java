@@ -32,7 +32,7 @@ import org.springframework.samples.petclinic.vet.VetRepository;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class PetClinicIntegrationTests {
+public class PetClinicIntegrationTests extends YdbDockerBaseTest {
 
 	@LocalServerPort
 	int port;
